@@ -1,35 +1,63 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { useState } from 'react';
+import './App.css';
 
+type Task = {
+  id: number;
+  text: string;
+  done: boolean;
+};
 function App() {
-  const [count, setCount] = useState(0)
+  const [taskList, setTaskList] = useState<Task[]>([
+    { id: 1, text: 'Lär dig React', done: false },
+    { id: 2, text: 'Bygg en todo-app', done: false },
+    { id: 3, text: 'Slappna av!', done: false },
+  ]);
+  const [taskText, setTaskText] = useState<string>('');
+
+  const addTask = () => {
+    console.log(taskList);
+
+    const newTask: Task = {
+      id: taskList.length + 1,
+      text: taskText,
+      done: false,
+    };
+    setTaskList([...taskList, newTask]);
+    setTaskText('');
+  };
+
+  const deleteTask = (id: number) => {
+    const NewTasks = taskList.filter((task) => task.id !== id);
+    setTaskList(NewTasks);
+  };
 
   return (
     <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
+      <h1>Todo</h1>
       <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
+        <input
+          type="text"
+          className="input"
+          value={taskText}
+          onChange={(e) => setTaskText(e.target.value)}
+          placeholder="Skriv en uppgift"
+        />
+
+        <button onClick={addTask}>Lägg till</button>
       </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
+      <div>
+        <ul>
+          {taskList.map((task) => (
+            <li key={task.id}>
+              {task.text}
+              <button onClick={() => deleteTask(task.id)}>Ta bort</button>
+              <button onClick={() => upDateTask(task.id)}>Ändra</button>
+            </li>
+          ))}
+        </ul>
+      </div>
     </>
-  )
+  );
 }
 
-export default App
+export default App;
