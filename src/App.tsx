@@ -16,6 +16,7 @@ function App() {
 
   const addTask = () => {
     console.log(taskList);
+    if(taskText !== ''){
 
     const newTask: Task = {
       id: taskList.length + 1,
@@ -24,11 +25,19 @@ function App() {
     };
     setTaskList([...taskList, newTask]);
     setTaskText('');
+  }
   };
 
   const deleteTask = (id: number) => {
     const NewTasks = taskList.filter((task) => task.id !== id);
     setTaskList(NewTasks);
+  };
+
+  const toggleTaskDone = (id: number) => {
+    const updatedTaskList = taskList.map((task) =>
+      task.id === id ? { ...task, done: !task.done } : task
+    );
+    setTaskList(updatedTaskList);
   };
 
   return (
@@ -49,9 +58,12 @@ function App() {
         <ul>
           {taskList.map((task) => (
             <li key={task.id}>
-              {task.text}
+              <span style={{ textDecoration: task.done ? 'line-through' : 'none' }}>
+                {task.text}
+              </span>
+
+              <input type="checkbox" checked={task.done} onChange={() => toggleTaskDone(task.id)} />
               <button onClick={() => deleteTask(task.id)}>Ta bort</button>
-              <button onClick={() => upDateTask(task.id)}>Ändra</button>
             </li>
           ))}
         </ul>
